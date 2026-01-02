@@ -55,7 +55,13 @@ class Bot(Client):
                 self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/CodeXBotzSupport for support")
                 sys.exit()
         try:
-            db_channel = await self.get_chat(CHANNEL_ID)
+            # Check if CHANNEL_ID is an integer string, convert it. If not, keep as username.
+            try:
+                chat_id = int(CHANNEL_ID)
+            except ValueError:
+                chat_id = CHANNEL_ID
+            
+            db_channel = await self.get_chat(chat_id)
             self.db_channel = db_channel
             test = await self.send_message(chat_id = db_channel.id, text = "Test Message")
             await test.delete()
