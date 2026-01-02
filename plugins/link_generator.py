@@ -6,6 +6,12 @@ from bot import Bot
 from config import ADMINS
 from helper_func import encode, get_message_id
 
+# ---------------------------------------------------------
+# 👇 THIS IS THE NEW PART
+# PASTE YOUR KOYEB LINK HERE (No trailing slash)
+URL = "https://concrete-gypsy-maxcinema-e2407faf.koyeb.app"
+# ---------------------------------------------------------
+
 @Bot.on_message(filters.private & filters.user(ADMINS) & filters.command('batch'))
 async def batch(client: Client, message: Message):
     while True:
@@ -17,7 +23,7 @@ async def batch(client: Client, message: Message):
         if f_msg_id:
             break
         else:
-            await first_message.reply("❌ Error\n\nthis Forwarded Post is not from my DB Channel or this Link is taken from DB Channel", quote = True)
+            await first_message.reply("❌ Error\n\nCould not find this post in the DB Channel.", quote = True)
             continue
 
     while True:
@@ -29,15 +35,25 @@ async def batch(client: Client, message: Message):
         if s_msg_id:
             break
         else:
-            await second_message.reply("❌ Error\n\nthis Forwarded Post is not from my DB Channel or this Link is taken from DB Channel", quote = True)
+            await second_message.reply("❌ Error\n\nCould not find this post in the DB Channel.", quote = True)
             continue
 
 
     string = f"get-{f_msg_id * abs(client.db_channel.id)}-{s_msg_id * abs(client.db_channel.id)}"
     base64_string = await encode(string)
-    link = f"https://t.me/{client.username}?start={base64_string}"
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
-    await second_message.reply_text(f"<b>Here is your link</b>\n\n{link}", quote=True, reply_markup=reply_markup)
+    
+    # 👇 GENERATING BOTH LINKS HERE
+    tg_link = f"https://t.me/{client.username}?start={base64_string}"
+    direct_link = f"{URL}/watch/{base64_string}"
+    
+    text_message = (
+        f"✅ **Batch Link Created!**\n\n"
+        f"✈️ **Telegram Link:**\n{tg_link}\n\n"
+        f"🌐 **Direct Download Link:**\n{direct_link}"
+    )
+
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={tg_link}')]])
+    await second_message.reply_text(text_message, quote=True, reply_markup=reply_markup)
 
 
 @Bot.on_message(filters.private & filters.user(ADMINS) & filters.command('genlink'))
@@ -51,10 +67,20 @@ async def link_generator(client: Client, message: Message):
         if msg_id:
             break
         else:
-            await channel_message.reply("❌ Error\n\nthis Forwarded Post is not from my DB Channel or this Link is not taken from DB Channel", quote = True)
+            await channel_message.reply("❌ Error\n\nCould not find this post in the DB Channel.", quote = True)
             continue
 
     base64_string = await encode(f"get-{msg_id * abs(client.db_channel.id)}")
-    link = f"https://t.me/{client.username}?start={base64_string}"
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
-    await channel_message.reply_text(f"<b>Here is your link</b>\n\n{link}", quote=True, reply_markup=reply_markup)
+    
+    # 👇 GENERATING BOTH LINKS HERE
+    tg_link = f"https://t.me/{client.username}?start={base64_string}"
+    direct_link = f"{URL}/watch/{base64_string}"
+
+    text_message = (
+        f"✅ **Link Generated!**\n\n"
+        f"✈️ **Telegram Link:**\n{tg_link}\n\n"
+        f"🌐 **Direct Download Link:**\n{direct_link}"
+    )
+
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={tg_link}')]])
+    await channel_message.reply_text(text_message, quote=True, reply_markup=reply_markup)
