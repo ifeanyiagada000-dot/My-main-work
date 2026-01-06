@@ -11,7 +11,7 @@ from bot import Bot
 # ---------------------------------------------------------
 # 👇 THIS IS THE NEW PART
 # PASTE YOUR KOYEB LINK HERE (No trailing slash)
-URL = "https://aware-kim-maxworkers-ad32ccc0.koyeb.app/"
+URL = "https://aware-kim-maxworkers-ad32ccc0.koyeb.app"
 # ---------------------------------------------------------
 
 @Bot.on_message(filters.private & filters.user(ADMINS) & filters.command('batch'))
