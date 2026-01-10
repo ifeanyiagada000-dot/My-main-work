@@ -30,7 +30,6 @@ class Bot(Client):
             },
             workers=TG_BOT_WORKERS,
             bot_token=TG_BOT_TOKEN,
-            in_memory=True, # 👈 THIS IS THE FIX. (Keeps login in RAM, not Disk)
             ipv6=False
         )
         self.LOGGER = LOGGER
