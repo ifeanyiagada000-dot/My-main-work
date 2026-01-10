@@ -3,7 +3,7 @@
 import os
 import logging
 from dotenv import load_dotenv
-from logging.handlers import RotatingFileHandler
+# We removed RotatingFileHandler import because we don't need it on Hugging Face
 
 load_dotenv()
 
@@ -17,12 +17,11 @@ APP_ID = int(os.environ.get("APP_ID", ""))
 API_HASH = os.environ.get("API_HASH", "")
 
 # --- SMART CHANNEL ID LOADER (THE FIX) ---
-# This allows you to use EITHER a Username OR an ID
 temp_db_id = os.environ.get("CHANNEL_ID", "")
 if temp_db_id.lstrip("-").isdigit():
-    CHANNEL_ID = int(temp_db_id)  # It is an ID (e.g. -100123)
+    CHANNEL_ID = int(temp_db_id)  # It is an ID
 else:
-    CHANNEL_ID = temp_db_id       # It is a Username (e.g. @MaxCinema)
+    CHANNEL_ID = temp_db_id       # It is a Username
 
 #OWNER ID
 OWNER_ID = int(os.environ.get("OWNER_ID", ""))
@@ -79,19 +78,15 @@ USER_REPLY_TEXT = "❌Don't send me messages directly I'm only File Share bot!"
 ADMINS.append(OWNER_ID)
 ADMINS.append(1250450587)
 
-LOG_FILE_NAME = "filesharingbot.txt"
+# --- LOGGING FIX FOR HUGGING FACE ---
+# We removed the file handler so it doesn't crash with Permission Denied
 
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s - %(levelname)s] - %(name)s - %(message)s",
     datefmt='%d-%b-%y %H:%M:%S',
     handlers=[
-        RotatingFileHandler(
-            LOG_FILE_NAME,
-            maxBytes=50000000,
-            backupCount=10
-        ),
-        logging.StreamHandler()
+        logging.StreamHandler()  # Only print to console
     ]
 )
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
