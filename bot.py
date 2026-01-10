@@ -35,7 +35,7 @@ class Bot(Client):
             # 👇 ADD THIS PROXY BLOCK
             proxy={
                 "scheme": "socks5",  
-                "hostname": "72.195.34.59", # 👈 PASTE THE PROXY IP HERE
+                "hostname": "174.75.211.193", # 👈 PASTE THE PROXY IP HERE
                 "port": 4145             # 👈 PASTE THE PROXY PORT HERE
             }
         )
