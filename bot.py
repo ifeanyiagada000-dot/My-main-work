@@ -31,13 +31,7 @@ class Bot(Client):
             workers=TG_BOT_WORKERS,
             bot_token=TG_BOT_TOKEN,
             in_memory=True, # 👈 THIS IS THE FIX. (Keeps login in RAM, not Disk)
-            ipv6=False,
-            # 👇 ADD THIS PROXY BLOCK
-            proxy={
-                "scheme": "socks5",  
-                "hostname": "192.252.210.233", # 👈 PASTE THE PROXY IP HERE
-                "port": 4145             # 👈 PASTE THE PROXY PORT HERE
-            }
+            ipv6=False
         )
         self.LOGGER = LOGGER
 
